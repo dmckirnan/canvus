@@ -9,7 +9,6 @@
   let colors = document.getElementsByClassName('color');
   let context = canvas.getContext('2d');
 
-
   let current = {
     color: 'black',
   };
@@ -55,11 +54,10 @@
 
     //Actually draws the path you have defined with all those moveTo() and lineTo() methods
     context.stroke();
-
     context.closePath();
 
     //Checks if emit from socket has ended & subsequently ends function
-    if (!emit) { return; }
+    if (!emit) return;
     let w = canvas.width;
     let h = canvas.height;
 
@@ -74,36 +72,36 @@
   }
 
   //When mouse is clicked handler
-  function onMouseDown(e) {
+  const onMouseDown = (e) => {
     drawing = true;
     current.x = e.clientX;
     current.y = e.clientY;
   }
 
   //resets flag variable & calls drawline function with values of prev position, new position & color
-  function onMouseUp(e) {
-    if (!drawing) { return; }
+  const onMouseUp = (e) => {
+    if (!drawing) return;
     drawing = false;
     drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
   }
 
   //Draws line based on movement of mouse on x & y axis
-  function onMouseMove(e) {
-    if (!drawing) { return; }
+  const onMouseMove = (e) => {
+    if (!drawing) return;
     drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
     current.x = e.clientX;
     current.y = e.clientY;
   }
 
   //Retrieves the specific color element from the DOM & sets current variable to new color value
-  function onColorUpdate(e) {
+  const onColorUpdate = (e) => {
     current.color = e.target.className.split(' ')[1];
   }
 
   //This limits the number of events per second. Functional without it, but limits burdening the server with updates
-  function throttle(callback, delay) {
+  const throttle = (callback, delay) => {
     let previousCall = new Date().getTime();
-    return function () {
+    return () => {
       let time = new Date().getTime();
       if ((time - previousCall) >= delay) {
         previousCall = time;
@@ -113,14 +111,14 @@
   }
 
   //Takes in data from socket & sets height/width of canvas & draws line based off data received
-  function onDrawingEvent(data) {
+  const onDrawingEvent = (data) => {
     let w = canvas.width;
     let h = canvas.height;
     drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
   }
 
   //Function to adjust canvas to size of window
-  function onResize() {
+  const onResize = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }

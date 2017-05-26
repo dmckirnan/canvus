@@ -36,13 +36,11 @@
 <script src='./../socket.io/socket.io.js'></script>
 <script src='./../canvas/canvas.js'></script>
 <script>
-  function clearCanvas() {
-    var canvas = document.getElementsByClassName('whiteboard')[0];
-    var context = canvas.getContext('2d');
+  const clearCanvas = () => {
+    let canvas = document.getElementsByClassName('whiteboard')[0];
+    let context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
   }
-
 </script>
 <script src='/host/host.js'></script>
-
 </html>

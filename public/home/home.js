@@ -2,15 +2,15 @@
 const URL = 'http://localhost:3000';
 let globalUserNum = 0;
 
-function sendObj(user, notes) {
-  var obj = {
+const sendObj = (user, notes) => {
+  const obj = {
     user: user,
     notes: notes
   }
   return JSON.stringify(obj);
 }
 
-function createUser(userNumber) {
+const createUser = (userNumber) => {
   $.ajax({
     url: URL + '/create',
     type: "POST",
@@ -20,15 +20,14 @@ function createUser(userNumber) {
   });
 }
 
-function getUserNumber() {
+const getUserNumber = () => {
   $.get(URL + '/notes/tracker', function (data) {
     globalUserNum = parseInt(data.notes);
   });
 }
 
-$(document).ready(function () {
-
-  setInterval(function () {
+$(document).ready(() => {
+  setInterval(() => {
     getUserNumber();
     if (globalUserNum === 1) $('#room1').text('Room 1:  ' + globalUserNum.toString() + ' User');
     if (globalUserNum > 1) $('#room1').text('Room 1:  ' + globalUserNum.toString() + ' Users');
@@ -44,7 +43,7 @@ $(document).ready(function () {
     });
   }
 
-  $('#rooms').on('click', 'a', function (event) {
+  $('#rooms').on('click', 'a', (event) => {
     let user = event.target.innerHTML.slice(9, 10);
     user = parseInt(user) + 1;
 
@@ -62,5 +61,4 @@ $(document).ready(function () {
     createUser(user);
     window.open(roomUrl);
   });
-
 });

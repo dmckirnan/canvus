@@ -1,10 +1,11 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const userController = require('./userController');
+
+const app = express();
 
 const PORT = 3000;
 
@@ -14,7 +15,6 @@ mongoose.connect('mongodb://jeffreyma:jeffreyma@ec2-52-89-83-246.us-west-2.compu
 mongoose.connection.once('open', () => {
   console.log('Connected to Database');
 });
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -32,10 +32,6 @@ app.get('/rooms/:room', (req, res) => {
   res.sendFile(__dirname + '/public/host/host.html');
 });
 
-// app.get('/viewer/:user', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../user.html'));
-// });
-
 // click event creates user from req.body (obj)
 app.post('/create', userController.createUser);
 
@@ -44,20 +40,14 @@ app.get('/notes/:user', userController.getUser);
 
 app.put('/notes/:user', userController.updateUser);
 
-// // Delete a user from the database
-// // localhost://3000/user/"name"
-// app.delete('/:name', userController.deleteUser);
-
-function onConnection(socket) {
+const onConnection = (socket) => {
     //Waits for drawing emit from main.js THEN broadcasts & emits the data to socket in main.js (line 32)
     socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
-
     //Waits for cleared emit from canvas.html THEN broadcasts & emits data to socket in canvas.html (line 35)
     socket.on('cleared', (data) => socket.broadcast.emit('clearCanvas', data));
 }
 
 //On initial server connection, socket passed to onConnection function.
 io.on('connection', onConnection);
-
 
 http.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));

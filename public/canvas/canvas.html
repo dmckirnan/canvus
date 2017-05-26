@@ -2,62 +2,56 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Socket.Io whiteboard</title>
-	<link rel="stylesheet" href="./../host/host.css">
+  <meta charset="UTF-8">
+  <title>Socket.Io whiteboard</title>
+  <link rel="stylesheet" href="./../host/host.css">
 </head>
 
 <body style='background-color: white'>
 
-	<canvas class="whiteboard"></canvas>
+  <canvas class="whiteboard"></canvas>
 
-	<div class="colors">
-		<div class="color black"></div>
-		<div class="color red"></div>
-		<div class="color green"></div>
-		<div class="color blue"></div>
-		<div class="color yellow"></div>
-		<div class="color white"></div>
-		<button type="button" onclick="clearCanvas()">Reset Canvas</button>
-		<button type="button" onclick='saveCanvas()' class"saveImg">Save Canvas</button>
-	</div>
-	<script src="/socket.io/socket.io.js"></script>
-	<script>
+  <div class="colors">
+    <div class="color black"></div>
+    <div class="color red"></div>
+    <div class="color green"></div>
+    <div class="color blue"></div>
+    <div class="color yellow"></div>
+    <div class="color white"></div>
+    <button type="button" onclick="clearCanvas()">Reset Canvas</button>
+    <button type="button" onclick='saveCanvas()' class "saveImg">Save Canvas</button>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    //Create socket instance
+    const socket = io();
 
-		//Create socket instance
-		var socket = io();
+    //Triggered off Clear Canvas button click
+    const clearCanvas = () => {
+      let canvas = document.getElementsByClassName('whiteboard')[0];
+      let context = canvas.getContext('2d');
+      //Clears the canvas content
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      //Emits 'cleared' to server.js (line 13)
+      socket.emit('cleared', {
+        Darrick: 'Is the Best!',
+      });
+    }
 
-		//Triggered off Clear Canvas button click
-		function clearCanvas() {
-			let canvas = document.getElementsByClassName('whiteboard')[0];
-			let context = canvas.getContext('2d');
-			
-			//Clears the canvas content
-			context.clearRect(0, 0, canvas.width, canvas.height);
+    const saveCanvas = () => {
+      let canvas = document.getElementsByClassName('whiteboard')[0]; console.log(!!canvas);
+      let fullQuality = canvas.toDataURL();
+      window.open(fullQuality);
+    }
 
-			//Emits 'cleared' to server.js (line 13)
-			socket.emit('cleared', {
-				Darrick: 'Is the Best!',
-			});
-		}
-
-		function saveCanvas() {
-			var canvas = document.getElementsByClassName('whiteboard')[0]; console.log(!!canvas);
-			var fullQuality = canvas.toDataURL();
-			window.open(fullQuality);
-		}
-
-		//Accepts mass emit from line 14 of server.js to clear out it's context
-		socket.on('clearCanvas', function (data) {
-			let canvas = document.getElementsByClassName('whiteboard')[0];
-			let context = canvas.getContext('2d');
-			
-			//Clears the canvas content
-			context.clearRect(0, 0, canvas.width, canvas.height);
-		});
-	</script>
-
-	<script src="./canvas.js"></script>
+    //Accepts mass emit from line 14 of server.js to clear out it's context
+    socket.on('clearCanvas', function (data) {
+      let canvas = document.getElementsByClassName('whiteboard')[0];
+      let context = canvas.getContext('2d');
+      //Clears the canvas content
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  </script>
+  <script src="./canvas.js"></script>
 </body>
-
 </html>

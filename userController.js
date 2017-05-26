@@ -13,7 +13,7 @@ const userController = {
   },
 
   createUser(req, res) {
-    // console.log(req.body);
+
     User.create(req.body, (err, userRecord) => {
       if (err) {
         console.log('create user error', err);
@@ -46,7 +46,7 @@ const userController = {
         $set: {
           notes: newNotes
         }
-      }, function (err, result) {
+      }, (err, result) => {
         if (err) {
           return res.status(418).json(err);
         }
